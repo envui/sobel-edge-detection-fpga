@@ -217,13 +217,16 @@ Integrates the processing pipeline and the display path. Dual-clock.
 | `vid_r`, `vid_g`, `vid_b` | out | 8 | 24-bit RGB |
 | `vid_pclk` | out | 1 | Pixel clock passthrough |
 
-> **Current state:** the framebuffer path in this module is commented out. A
-> second `image_rom` instance clocked on `pix_clk_in` feeds the display
-> directly, so HDMI shows the **source image**, not the edge map. This is a
-> leftover bring-up configuration. The commented block (framebuffer +
-> `display_mapper_2x` + `rgb_gray` on `fb_rd_data`) is intact directly above —
-> restoring it is a mechanical change. `top_sobel_video_zybo.v` has the correct
-> full wiring to copy from.
+The display path reads from the framebuffer: `display_mapper_2x` generates
+`fb_rd_addr` from the video timing coordinates, `simple_dual_port_ram` returns
+the stored edge value on `pix_clk_in`, and `rgb_gray` expands it to RGB. This
+wiring is identical to `top_sobel_video_zybo.v`, which `tb_top_small` exercises.
+
+> **History:** this module previously had the framebuffer commented out, with a
+> second `image_rom` feeding the display directly — a bring-up configuration
+> that displayed the source image rather than the edge map. That is the
+> configuration the report's synthesis results were measured on. See the git
+> history for the original.
 
 ---
 

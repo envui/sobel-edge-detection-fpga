@@ -242,12 +242,13 @@ the SystemC LT reference model, and the post-implementation reports.
 The SystemC Loosely Timed model described in Section IV of the report is **not
 in this repository** — it was not recovered with the Vivado project sources.
 
-`sobel_video_core.v` currently has the framebuffer path commented out, with a
-second `image_rom` instance feeding the display directly. That is a bring-up
-configuration left over from the black-screen debug session: it shows the
-*source* image rather than the edge map. `top_sobel_video_zybo.v` retains the
-full framebuffer path. Restoring the commented block in `sobel_video_core.v` is
-the one change needed for the HDMI top to display processed edges.
+The resource and timing figures above come from the Vivado run described in the
+report, which was built from the bring-up configuration of `sobel_video_core.v`
+(source image routed straight to the display). That module now wires the full
+framebuffer path, so **the numbers have not been re-measured against the current
+source.** Total on-chip storage is unchanged — one image ROM plus one
+framebuffer, rather than two image ROMs — so the 16-BRAM figure should hold, but
+treat the table as indicative until someone re-runs implementation.
 
 ## Possible extensions
 

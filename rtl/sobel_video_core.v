@@ -205,50 +205,7 @@ module sobel_video_core #(
     // -----------------------------------
     // Display mapper
     // -----------------------------------
-//    wire [ADDR_W-1:0] fb_rd_addr;
-
-//    display_mapper_2x #(
-//        .SRC_W(IMG_W),
-//        .SRC_H(IMG_H),
-//        .ADDR_W(ADDR_W),
-//        .XY_W(XY_W)
-//    ) u_mapper (
-//        .disp_x(disp_x[XY_W-1:0]),
-//        .disp_y(disp_y[XY_W-1:0]),
-//        .src_addr(fb_rd_addr)
-//    );
-
-//    // -----------------------------------
-//    // Framebuffer RAM
-//    // -----------------------------------
-//    wire [7:0] fb_rd_data;
-
-//    simple_dual_port_ram #(
-//        .DEPTH(DEPTH),
-//        .ADDR_W(ADDR_W),
-//        .DATA_W(DATA_W)
-//    ) u_fb (
-//        .wr_clk(proc_clk_in),
-//        .wr_en(edge_valid),
-//        .wr_addr(fb_wr_addr),
-//        .wr_data(edge_pixel),
-//        .rd_clk(pix_clk_in),
-//        .rd_addr(fb_rd_addr),
-//        .rd_data(fb_rd_data)
-//    );
-
-//    // -----------------------------------
-//    // Gray to RGB
-//    // -----------------------------------
-//    rgb_gray u_rgb (
-//        .gray(fb_rd_data),
-//        .de(vid_de),
-//        .r(vid_r),
-//        .g(vid_g),
-//        .b(vid_b)
-//    );
-
-    wire [ADDR_W-1:0] disp_addr;
+    wire [ADDR_W-1:0] fb_rd_addr;
 
     display_mapper_2x #(
         .SRC_W(IMG_W),
@@ -258,25 +215,33 @@ module sobel_video_core #(
     ) u_mapper (
         .disp_x(disp_x[XY_W-1:0]),
         .disp_y(disp_y[XY_W-1:0]),
-        .src_addr(disp_addr)
+        .src_addr(fb_rd_addr)
     );
 
-    wire [7:0] rom_disp_pixel;
+    // -----------------------------------
+    // Framebuffer RAM
+    // -----------------------------------
+    wire [7:0] fb_rd_data;
 
-    image_rom #(
-        .IMG_W(IMG_W),
-        .IMG_H(IMG_H),
-        .DATA_W(DATA_W),
+    simple_dual_port_ram #(
+        .DEPTH(DEPTH),
         .ADDR_W(ADDR_W),
-        .MEM_FILE(MEM_FILE)
-    ) u_rom_display (
-        .clk(pix_clk_in),
-        .addr(disp_addr),
-        .dout(rom_disp_pixel)
+        .DATA_W(DATA_W)
+    ) u_fb (
+        .wr_clk(proc_clk_in),
+        .wr_en(edge_valid),
+        .wr_addr(fb_wr_addr),
+        .wr_data(edge_pixel),
+        .rd_clk(pix_clk_in),
+        .rd_addr(fb_rd_addr),
+        .rd_data(fb_rd_data)
     );
 
+    // -----------------------------------
+    // Gray to RGB
+    // -----------------------------------
     rgb_gray u_rgb (
-        .gray(rom_disp_pixel),
+        .gray(fb_rd_data),
         .de(vid_de),
         .r(vid_r),
         .g(vid_g),
