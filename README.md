@@ -255,6 +255,18 @@ Live camera input over MIPI CSI-2; Gaussian pre-filtering to suppress noise;
 non-maximum suppression for Canny-style edge thinning; 1080p output; AXI-Lite
 runtime control of the threshold from the ARM core rather than slide switches.
 
+## License
+
+MIT — see [`LICENSE`](LICENSE). This covers the Verilog, scripts, and
+documentation written by the authors.
+
+It does **not** cover third-party material included for reproducibility:
+`ip/rgb2dvi_0.xci` and `ip/clk_wiz_0.xci` are Vivado IP configurations, and the
+`rgb2dvi` core itself is Digilent's, distributed under its own terms in the
+[vivado-library](https://github.com/Digilent/vivado-library) repository.
+`constraints/Zybo-Z7-Master.xdc` derives from Digilent's board master
+constraints file.
+
 ## Authors
 
 Matthew Margulies, Kyle Leng, Juan Miguel Constantino, Noah Luu
